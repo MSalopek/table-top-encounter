@@ -1,0 +1,283 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ 
+li {
+  list-style-type: none;
+}
+.heading {
+  padding: 2px;
+  margin: 0px;
+  text-align: left;
+  background: #1abc9c;
+  color: white;
+  text-shadow: 1px 1px 1px black
+}
+
+.heading h2 {
+  display: inline-block; 
+  vertical-align: middle; 
+  text-align: left;
+}
+
+.menuButton {
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+  margin: 10px;
+  text-align: center;
+  line-height: 30px;
+  font-size: 18px;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;  
+}
+
+.initiativeOuterContainer { 
+  background-color: white;
+  padding: 25px 10px 10px 10px;
+  /* height: 100vh;  */
+  flex: 70%;
+} 
+
+.tabs {
+  width: 100%;
+  height: 8%;
+  border-bottom: 2px orange solid;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin: 0;
+  padding: 0;
+}
+
+.tabs .tabButton {
+  background-color: transparent;
+  height: 100%;
+  width: 20%;
+  border: none;
+}
+
+.tabs .tabButtonActive {
+  background-color: transparent;
+  height: 100%;
+  width: 35%;
+  border-top: 3px;
+  border-right: 1px;
+  border-left: 1px;
+  border-style: solid ;
+  border-color: orange;
+  border-bottom: 0;
+}
+
+.initiativeContainer {
+    margin: 20px;
+    /* border-radius: 5px; */
+    margin-top: 2px;
+    border-style: inset;
+    border-color: #ccc;
+    border-width: 1px;
+    background-color: #DCDCDC;
+    flex: 70%;
+  }
+
+.player-active {
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 70%;
+  /* border-radius: 5px; */
+  padding: 0;
+  margin: 2px;
+  color:#202020;
+  background-color: white;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select:none;
+  user-select:none;
+  -o-user-select:none;
+  text-shadow: 0px 1px 0px #484848;
+}
+
+.player-inactive {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 70%;
+  /* border-radius: 5px; */
+  padding: 0;
+  margin: 2px;
+  color: white;
+  text-shadow: 0px 1px 0px #484848;
+  background-color: #2F4F4F;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select:none;
+  user-select:none;
+  -o-user-select:none;
+}
+
+.player-current {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 70%;
+  /* border-radius: 5px; */
+  padding: 0;
+  margin: 2px;
+  color: white;
+  text-shadow: 0px 1px 0px #484848;
+  background-color: #1abc9c;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select:none;
+  user-select:none;
+  -o-user-select:none;
+}
+
+.stat-p {
+  flex: 10%;
+  margin: 0;
+  padding-top: 5px;
+  text-align: center;
+  line-height: 30px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.name-p {
+  flex: 30%;
+  margin: 0;
+  padding-top: 10px;
+  text-align: center;
+  line-height: 30px;
+  font-size: 16px;
+  word-wrap: normal;
+  border-right: 1px solid #ccc;
+}
+
+
+.toggleButtonCurrent {
+  border: none;
+  background-color: transparent;
+  color: greenyellow;
+  stroke: black;
+  stroke-width: 5px;
+}
+
+.toggleButtonStatus {
+  border: none;
+  background-color: transparent;
+  color: crimson;
+  stroke: black;
+  stroke-width: 10px;
+}
+
+.Notebook {
+  flex: 30%;
+  height: 90vh;
+  border: 2px solid green;
+}
+
+.NotebookPageContent {
+  border: 2px solid orange;
+  height: 80vh;
+  /* padding: 5px; */
+  overflow-y: scroll; 
+}
+
+/* NOTEBOOK CONTENT BESTIARY ELEMENTS */
+.bestiary .ul {
+  list-style: none;
+}
+
+.bestiary .list-elem {
+  padding: 0;
+  margin: 5px 0px 5px 5px;
+  border: 2px solid purple;
+}
+
+.beast-element {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.statblock {
+  width: 65%;
+  /* height: 100 */
+}
+
+/* bestiary counter and buttons */
+
+.notebook-counter {
+  display: flex; 
+  flex-wrap: wrap;
+  flex-direction: row;
+  width: 35%;
+}
+
+.action-button-container {
+  border: 2px dotted purple;
+  flex: 30%;
+}
+
+.action-button-container .action-button {
+  width: 100%;
+  height: 50%;
+  background-color: transparent;
+  border: none;
+}
+
+.search-bar {
+  width: 90%;
+  margin: 5px;
+  text-align: center;
+}
+.check-box {
+  flex: 30%;  
+}
+.check-box .action-button-check {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+}
+
+.counter {
+  flex: 30%;
+  border: 1px dotted yellowgreen;
+}
+
+.counter-para {
+  text-align: center;
+  line-height: 30px;
+}
+
+.beast-info-table {
+  border: 1px solid gray;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.beast-info-table th {
+  text-align: center;
+  vertical-align: middle;
+  word-wrap: normal;
+}
+
+.beast-info-table td {
+  text-align: center;
+  vertical-align: middle;
+}
