@@ -53,6 +53,7 @@ class Player extends React.Component {
     }
 
     togleStatusChange(event) {
+        event.preventDefault();
         this.setState({
             isActive: !this.state.isActive,
             isCurrent: false,
@@ -60,6 +61,7 @@ class Player extends React.Component {
     }
 
     toggleCurrentPlayer(event) {
+        event.preventDefault();
         this.setState({
             isCurrent: !this.state.isCurrent,
             isActive: !this.isActive ? true: false,
@@ -67,24 +69,15 @@ class Player extends React.Component {
     }
 
     render() {
-        // text selection inside ps is turned off with css prop
+        // NOTE text selection inside ps is turned off with css prop
         return (
             <div className={this._selectPlayerClassName()}>
-                <p className="name-p">{"PLAYER - " + this.props.nm}</p>
+                <p className="name-p">{this.props.name}</p>
                 <p className="stat-p">
-                    <span>AC: </span>11
+                    <span>AC: </span>{this.props.ac}
                 </p>
                 <p className="stat-p">
-                    <span>HP: </span>10
-                </p>
-                <p className="stat-p">
-                    <span>Hit: </span>+3
-                </p>
-                <p className="stat-p">
-                    <span>PP: </span>10
-                </p>
-                <p className="stat-p">
-                    <span>PI: </span>10
+                    <span>HP: </span>{this.props.hp}
                 </p>
                 <p className="stat-p">
                     <ToggleStatus buttonClicked={this.togleStatusChange.bind(this)}/>
@@ -95,7 +88,7 @@ class Player extends React.Component {
     }
 }
 
-// react-sortable-hoc pasta
+// react-sortable-hoc examples pasta
 const SortableItem = sortableElement(({value}) => <li>{value}</li>);
 
 const SortableContainer = sortableContainer(({children}) => {
@@ -106,17 +99,15 @@ class InitiativeOrder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: this.createPlayers(5),
+            // this is an antipattern but I need to set
+            // items from props because items are used for sorting
+            // TODO
+            // this also clears state when moving elements - >
+            // new elements object get rendered instead of keeping
+            // old ones with their previous states
+            // MAYBE USE REDUX IF NOT FIXABLE
+            items: props.players,
         };
-    }
-    createPlayers(playerCount) {
-        let players = [];
-        for (let i=0; i<playerCount; i++) {
-            players.push(
-                <Player nm={i}/>
-            );
-        };
-        return players;
     }
 
     onSortEnd = ({oldIndex, newIndex}) => {
@@ -126,10 +117,10 @@ class InitiativeOrder extends React.Component {
       };
 
     render() {
-        const {items} = this.state;
+        const { items } = this.state;
         return (
             <div className="initiativeContainer">
-            <SortableContainer pressDelay={100} onSortStart={(_, event) => event.preventDefault()} onSortEnd={this.onSortEnd}>
+            <SortableContainer pressDelay={150} onSortStart={(_, event) => event.preventDefault()} onSortEnd={this.onSortEnd}>
             {items.map((value, index) => (
               <SortableItem key={`item-${index}`} index={index} value={value} />
             ))}
@@ -140,7 +131,49 @@ class InitiativeOrder extends React.Component {
 }
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            players: [],
+            playersCount: {}
+        }
+        this.addPlayer = this.addPlayer.bind(this)
+    }
+
+    addPlayer(data) {
+        let prevPlayers = this.state.players;
+        let prevCount = this.state.playersCount;
+        for (let i=0; i<data.count;i++){
+            if (!prevCount[data.name]) {
+                prevCount[data.name] = 1;
+                prevPlayers.push(
+                    <Player 
+                        key={uniqueId("player")} 
+                        name={data.name}   
+                        ac={data.ac}
+                        hp={data.hp} />
+                );
+            } else {
+                prevCount[data.name] += 1;
+                let cloneName = data.name + " " + prevCount[data.name]; 
+                prevPlayers.push(
+                    <Player 
+                        key={uniqueId("player")} 
+                        name={cloneName}    
+                        ac={data.ac}
+                        hp={data.hp} />
+                    );
+            }
+        }   
+        console.log("WENT HERE", this.state.playersCount)
+        this.setState({
+            players: prevPlayers,
+            playersCount: prevCount,
+        });
+    }
+
     render() {
+        const players = this.state.players;
         return (
             <div>
                 <div className="heading">
@@ -148,9 +181,9 @@ class App extends React.Component {
                 </div>
             <div className="main">
                 <div className="initiativeOuterContainer">
-                    <InitiativeOrder/>
+                    <InitiativeOrder players={players}/>
                 </div>
-                <Notebook/>
+                <Notebook addPlayer={this.addPlayer}/>
             </div>
             </div>
         );

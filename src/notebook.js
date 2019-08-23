@@ -31,6 +31,7 @@ class NotebookTabs extends React.Component {
         super(props);
         this.state = {
             activeButton: "NPCs", // Bestiary, Create, PCs
+            activeView: "NPCs"
         }
         this.handleTabChange = this.handleTabChange.bind(this);
     }
@@ -70,18 +71,32 @@ class BeastMiniView extends React.Component {
             count: 0,
         }
     }
+
     onClickUp(event) {
         event.preventDefault();
         if (this.state.count < 10) {
             this.setState({count: this.state.count+1})
         } 
-      }
+    }
+
     onClickDown(event) {
         event.preventDefault();
         if (this.state.count > 0) {
             this.setState({count: this.state.count-1})
         }
-      }
+    }
+
+    sendBeastData(event) {
+        event.preventDefault();
+        const data = {
+            name: this.props.p_name,
+            ac: this.props.ac,
+            hp: this.props.hp,
+            count: this.state.count
+        }
+        this.props.addPlayer(data)
+    }
+
     render () {
         return (
             <li key={this.props.key_name} className="list-elem">
@@ -110,7 +125,7 @@ class BeastMiniView extends React.Component {
                         <button className="action-button" onClick={e => this.onClickDown(e)}><FontAwesomeIcon icon={faCaretDown}/></button>
                     </div>
                     <div className="check-box">
-                        <button className="action-button-check"><FontAwesomeIcon icon={faCheck}/></button>
+                        <button className="action-button-check" onClick={e => this.sendBeastData(e)}><FontAwesomeIcon icon={faCheck}/></button>
                     </div>
                 </div>
             </div>
@@ -132,6 +147,7 @@ export class Notebook extends React.Component {
             // move tab state to this
         }
     }
+
     fetchBestiary() {
         fetch('http://localhost:8000/api/v1/bestiary')
           .then(response => response.json())
@@ -154,15 +170,17 @@ export class Notebook extends React.Component {
       }
     
     handleScroll = (event) => {    
-    var node = event.target;
-    const bottom = node.scrollHeight - node.scrollTop === node.clientHeight;
+        var node = event.target;
+        const bottom = node.scrollHeight - node.scrollTop === node.clientHeight;
         if (bottom) {      
             console.log("BOTTOM REACHED:", bottom);
-            this.setState(oldState => {
-                return ({
-                    bestiary_max_index: oldState.bestiary_max_index + 25
+            let next_max_index = this.state.bestiary_max_index + 25;
+            next_max_index = (next_max_index > this.state.bestiary_len) ? 
+                this.state.bestiary_len :
+                next_max_index; 
+            this.setState({
+                    bestiary_max_index: next_max_index
                 });
-            }) 
         }   
     }
 
@@ -172,7 +190,6 @@ export class Notebook extends React.Component {
     
     render() {
         const { isLoading, bestiary, error } = this.state;
-        // implement infinite scroll // load on scroll and such 
         const that = this;
         return (
             <div className="Notebook">
@@ -190,9 +207,9 @@ export class Notebook extends React.Component {
                             bestiary.slice(this.state.bestiary_min_index, this.state.bestiary_max_index+1).map(item => {
                                 const { name, pretty_name, ac, hp, cr } = item;
                                 return (
-                                    <BeastMiniView key={uniqueId()} key_name={name} p_name={pretty_name} ac={ac} hp={hp} cr={cr} />
+                                    <BeastMiniView key={uniqueId()} addPlayer={this.props.addPlayer} key_name={name} p_name={pretty_name} ac={ac} hp={hp} cr={cr} />
                                 );
-                            })) : (<h3>Loading...</h3>)
+                            })) : (<div className="loader"></div>)
                         }
                     </ul>
                     </div>
