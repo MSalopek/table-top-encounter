@@ -7,7 +7,6 @@
     "@fortawesome/free-regular-svg-icons": "^5.10.1",
     "@fortawesome/free-solid-svg-icons": "^5.10.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
-    "@types/sortablejs": "^1.7.2",
     "array-move": "^2.1.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
