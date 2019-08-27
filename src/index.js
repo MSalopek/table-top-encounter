@@ -95,41 +95,6 @@ const SortableContainer = sortableContainer(({children}) => {
     return <ul>{children}</ul>;
   });
 
-class InitiativeOrder extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            // this is an antipattern but I need to set
-            // items from props because items are used for sorting
-            // TODO
-            // this also clears state when moving elements - >
-            // new elements object get rendered instead of keeping
-            // old ones with their previous states
-            // MAYBE USE REDUX IF NOT FIXABLE
-            items: props.players,
-        };
-    }
-
-    onSortEnd = ({oldIndex, newIndex}) => {
-        this.setState(({items}) => ({
-          items: arrayMove(items, oldIndex, newIndex),
-        }));
-      };
-
-    render() {
-        const { items } = this.state;
-        return (
-            <div className="initiativeContainer">
-            <SortableContainer pressDelay={150} onSortStart={(_, event) => event.preventDefault()} onSortEnd={this.onSortEnd}>
-            {items.map((value, index) => (
-              <SortableItem key={`item-${index}`} index={index} value={value} />
-            ))}
-          </SortableContainer>
-          </div>
-        );
-    }
-}
-
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -172,6 +137,12 @@ class App extends React.Component {
         });
     }
 
+    onSortEnd = ({oldIndex, newIndex}) => {
+        this.setState(({players}) => ({
+          players: arrayMove(players, oldIndex, newIndex),
+        }));
+      };
+
     render() {
         const players = this.state.players;
         return (
@@ -179,12 +150,26 @@ class App extends React.Component {
                 <div className="heading">
                     <NavButton/>
                 </div>
-            <div className="main">
-                <div className="initiativeOuterContainer">
-                    <InitiativeOrder players={players}/>
+                <div className="main">
+                    <div className="initiativeOuterContainer">
+                        <div className="initiativeContainer">
+                            <SortableContainer 
+                                pressDelay={150} 
+                                onSortStart={(_, event) => event.preventDefault()} 
+                                onSortEnd={this.onSortEnd}
+                            >
+                                {players.map((value, index) => (
+                                    <SortableItem 
+                                        key={`item-${index}`} 
+                                        index={index} 
+                                        value={value} 
+                                    />
+                                ))}
+                            </SortableContainer>
+                        </div>            
+                    </div>
+                    <Notebook addPlayer={this.addPlayer}/>
                 </div>
-                <Notebook addPlayer={this.addPlayer}/>
-            </div>
             </div>
         );
     }

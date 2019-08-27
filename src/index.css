@@ -53,11 +53,9 @@ li {
 } 
 
 .tabs {
-  width: 100%;
-  height: 8%;
+  width: inherit;
+  height: 46px;
   border-bottom: 2px orange solid;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
   margin: 0;
   padding: 0;
 }
@@ -165,7 +163,6 @@ li {
   border-right: 1px solid #ccc;
 }
 
-
 .toggleButtonCurrent {
   border: none;
   background-color: transparent;
@@ -183,16 +180,17 @@ li {
 }
 
 .Notebook {
-  flex: 30%;
+  flex: 28%;
   height: 90vh;
   border: 2px solid green;
+  background-color: #f2f2f2;
 }
 
 .NotebookPageContent {
   border: 2px solid orange;
-  height: 80vh;
-  /* padding: 5px; */
   overflow-y: scroll; 
+  height: 80vh;
+  padding: 5px;
 }
 
 /* NOTEBOOK CONTENT BESTIARY ELEMENTS */
@@ -203,7 +201,6 @@ li {
 .bestiary .list-elem {
   padding: 0;
   margin: 5px 0px 5px 5px;
-  border: 2px solid purple;
 }
 
 .beast-element {
@@ -227,7 +224,7 @@ li {
 }
 
 .action-button-container {
-  border: 2px dotted purple;
+  border: 1px solid black;
   flex: 30%;
 }
 
@@ -250,12 +247,12 @@ li {
   width: 100%;
   height: 100%;
   background-color: transparent;
-  border: none;
+  border: 1px solid black;  
 }
 
 .counter {
   flex: 30%;
-  border: 1px dotted yellowgreen;
+  border: 1px solid black;
 }
 
 .counter-para {
@@ -304,5 +301,51 @@ li {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
 /* loader animation end */
+
+
+/* forms start */
+.search-form {
+  padding: 4px;
+  width: 100%;
+  margin: 4px 8px;
+}
+
+.search-form input[type=text] {
+  width: 85%;
+  padding: 8px;
+  margin-left: 2px;
+  box-sizing: content-box;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.p-form {
+  padding: 10px;
+}
+
+.p-form input[type=text], input[type=number] {
+  width: 100%;
+  margin: 5px 0;
+  padding: 8px;
+  box-sizing: border-box;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.p-form input[type=submit] {
+  width: 100%;
+  background-color: #ddd;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.p-form-heading {
+  text-align: center
+}
+/* forms end */

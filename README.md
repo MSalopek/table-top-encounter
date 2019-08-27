@@ -16,6 +16,6 @@ I keep screencaps in doc/progress_pics to help me track design changes.
 - basic functionality development
 - design not thought out -- all UI/UX components are just placeholders waiting to be properly designed and programmed
 
-![](doc/progress_pics/prog_log_dev_2.gif)
+![](doc/progress_pics/prog_log_dev_3.gif)
 
 #### Built with React.js
