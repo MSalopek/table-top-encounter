@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGavel, faBars, faPlay } from '@fortawesome/free-solid-svg-icons';
 
 import { Notebook } from './notebook';
+import { ModalView } from './modal';
 import './index.css';
 
 
@@ -100,9 +101,27 @@ class App extends React.Component {
         super(props);
         this.state = {
             players: [],
-            playersCount: {}
+            playersCount: {},
+            showModal: false,
+            beastUID: 0,
         }
         this.addPlayer = this.addPlayer.bind(this)
+        this.showModal = this.showModal.bind(this)
+        this.hideModal = this.hideModal.bind(this)
+    }
+
+    showModal(uid) {
+        this.setState({
+            showModal: true,
+            beastUID: uid,
+        });
+        console.log("GOT THIS AS UID", uid)
+    }  
+
+    hideModal() {
+        this.setState({
+            showModal: false
+        })
     }
 
     addPlayer(data) {
@@ -130,7 +149,6 @@ class App extends React.Component {
                     );
             }
         }   
-        console.log("WENT HERE", this.state.playersCount)
         this.setState({
             players: prevPlayers,
             playersCount: prevCount,
@@ -168,7 +186,8 @@ class App extends React.Component {
                             </SortableContainer>
                         </div>            
                     </div>
-                    <Notebook addPlayer={this.addPlayer}/>
+                    <ModalView hideModal={this.hideModal} show={this.state.showModal} uid={this.state.beastUID} />
+                    <Notebook addPlayer={this.addPlayer} showModal={this.showModal}  />
                 </div>
             </div>
         );

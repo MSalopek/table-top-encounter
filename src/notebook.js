@@ -73,6 +73,12 @@ class BestiaryListElem extends React.Component {
         }
     }
 
+    onModalButtonClick(event) {
+        event.preventDefault();
+        console.log("SENDING", this.props.uid)
+        this.props.showModal(this.props.uid);
+    }
+
     onClickUp(event) {
         event.preventDefault();
         if (this.state.count < 10) {
@@ -111,7 +117,11 @@ class BestiaryListElem extends React.Component {
                     </thead>
                     <tbody> 
                         <tr>
-                            <td><FontAwesomeIcon icon={faQuestionCircle}/></td>
+                            <td>
+                                <button className="activateModalBtn" onClick={e => this.onModalButtonClick(e)}>
+                                    <FontAwesomeIcon icon={faQuestionCircle} size="lg"/>
+                                </button>
+                            </td>
                             <td><span><FontAwesomeIcon icon={faShieldAlt}/></span> {this.props.ac}</td>
                             <td><span><FontAwesomeIcon icon={faPlus}/></span> {this.props.hp}</td>
                             <td><span><FontAwesomeIcon icon={faStar}/></span> {this.props.cr}</td>
@@ -155,7 +165,7 @@ class BestiaryContent extends React.Component {
                     <ul>
                     {!isLoading ? (
                         bestiary.slice(minIndex, maxIndex+1).map(item => {
-                            const { name, pretty_name, ac, hp, cr } = item;
+                            const { name, pretty_name, ac, hp, cr, id } = item;
                             return (
                                 <BestiaryListElem 
                                     key={uniqueId()} 
@@ -164,7 +174,9 @@ class BestiaryContent extends React.Component {
                                     p_name={pretty_name} 
                                     ac={ac} 
                                     hp={hp} 
-                                    cr={cr} 
+                                    cr={cr}
+                                    showModal={this.props.showModal}
+                                    uid={id}
                                 />
                             );
                         })) : (<div className="loader"></div>)
@@ -313,7 +325,8 @@ export class Notebook extends React.Component {
                         bestiary={this.state.bestiary} 
                         min={0}
                         max={this.state.bestiary_max_index}
-                        addPlayer={this.props.addPlayer}/>
+                        addPlayer={this.props.addPlayer}
+                        showModal={this.props.showModal}/>
             case "PCs":
                 return <div>NOT IMPLEMENTED</div>
             case "Create":
