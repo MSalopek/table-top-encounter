@@ -1,5 +1,10 @@
 import React from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+
+import './modal.css';
+
 
 export class ModalView extends React.Component {
     // takes JSON response
@@ -59,13 +64,18 @@ export class ModalView extends React.Component {
 
         if (!this.state.isLoading) {
             const jsonData = this.state.jsonData;
+            console.log(jsonData);
             return (
                 <div className="modal-window">
                     <div className="modal-content">
-                        <button onClick={this.props.hideModal}>&times</button>
-                        <h2>{jsonData['Full Name'].toUpperCase()}</h2>
+                        <div className="close-btn-container">
+                            <button className="close-btn" onClick={this.props.hideModal}>
+                                <FontAwesomeIcon icon={faTimes} size="lg"/>
+                            </button>
+                        </div>
+                        <h2 className="name-heading">{jsonData['Full Name'].toUpperCase()}</h2>
                         {
-                            this.insertBasicData(
+                            this.insertSubtitle(
                                 jsonData['Alignment'],
                                 jsonData['Type'],
                                 jsonData['Challenge'][0])
@@ -73,14 +83,12 @@ export class ModalView extends React.Component {
                         <hr/>
                         {
                             this.insertBaseElems(
-                                [
-                                    jsonData["Size"],
-                                    jsonData["AC"],
-                                    jsonData["AC Type"],
-                                    jsonData["HP"],
-                                    jsonData["HP Dice"],
-                                    jsonData["Speed"],
-                                ]
+                                jsonData["Size"],
+                                jsonData["AC"],
+                                jsonData["AC Type"],
+                                jsonData["HP"],
+                                jsonData["HP Dice"],
+                                jsonData["Speed"],
                             )
                         }
                         <hr/>
@@ -94,6 +102,7 @@ export class ModalView extends React.Component {
                         {this.insertActions(jsonData["Actions"])}
                         <hr/>
                         {this.insertLegendaryActions(jsonData["Legendary Actions"])}
+                        <hr className="bottom-hr"/>
                     </div>
                 </div>
             )  
@@ -103,12 +112,12 @@ export class ModalView extends React.Component {
        
     }
 
-    insertBasicData(aligned, type, cr) {
+    insertSubtitle(aligned, type, cr) {
         return (
-            <div className="basic-data">
-                {this.titleCase(aligned)}
-                <span>{this.titleCase(type)};</span>
-                <span>{cr}</span>
+            <div className="subtitle">
+                <span>
+                    {this.titleCase(aligned)} {this.titleCase(type)} {cr}
+                </span>
             </div>
         )
     }
@@ -120,7 +129,12 @@ export class ModalView extends React.Component {
                 <div className="statblock-elem">
                     <span><b>{k}</b>  </span>
                     <br/>
-                    <span>{jsonStats[k]} ({jsonStatMods[k]})</span>
+                    <span>
+                        {jsonStats[k]} {(parseInt(jsonStatMods[k],10) > 0) 
+                                            ? `(+${jsonStatMods[k]})`
+                                            : `(${jsonStatMods[k]})`
+                                        }
+                    </span>
                 </div>
             );
         });
@@ -131,59 +145,38 @@ export class ModalView extends React.Component {
         )
     }
 
-    insertBaseElems(baseElemArray) {
-        // NOTE: baseElemArray == [size, ac, acType, hp, hpDice, speed]
-        // REFACTOR
-        let listItems = [];
-        for (let i=0; i<baseElemArray.length; i++) {
-            switch (i) {
-            case 0:
-                listItems.push(
-                    <li><b>Size:</b>
-                        <span>{this.titleCase(baseElemArray[0])}</span>
-                    </li>
-                );
-                break;
-            case 1:
-                console.log(baseElemArray[2])
-                listItems.push(
-                    <li><b>Armor:</b>
-                        {(baseElemArray[2] !== "undefined") 
-                            ? <span>{baseElemArray[1]} ({this.titleCase(baseElemArray[2])})</span>
-                            : <span>{baseElemArray[1]}</span>
-                        }
-                    </li>
-                );
-                break;
-            case 3:
-                listItems.push(
-                    <li><b>Hit Points:</b>
-                        <span>{baseElemArray[3]} ({this.titleCase(baseElemArray[4])})</span>
-                    </li>
-                );
-                break;
-            case 5:
-                let spans = [];
-                const speeds = baseElemArray[5];
-                Object.keys(speeds).forEach(k => {
-                    spans.push(
-                        <span>
-                        <b>{this.titleCase(k)}:</b> <i>{speeds[k]}</i>
-                        </span>
-                    );
-                });
-                listItems.push(
-                    <li><b>Speed:</b>
-                        {spans}
-                    </li>
-                );
-                break;
-            }
-        }
+    insertBaseElems(size, ac, acType, hp, hpDice, speed) {
+        let speeds = [];
+        Object.keys(speed).forEach(k => {
+            speeds.push(
+                <span>
+                    <i> {k}: </i>{speed[k]}
+                </span>
+            );
+        });
         return (
             <div className="base-elem">
                 <ul>
-                {listItems}
+                    <li>
+                        <span>
+                            <b>Size: </b><i>{size}</i></span>
+                    </li>
+                    <li>
+                        {(acType !== "undefined") 
+                            ? <span><b>Armor: </b><i>{ac} ({this.titleCase(acType)})</i></span>
+                            : <span><b>Armor: </b><i>{ac}</i></span>
+                        }
+                    </li>
+                    <li>
+                        <span>
+                            <b>Hit Points: </b><i>{hp} ({hpDice})</i>
+                        </span>
+                    </li>
+                    <li>
+                        <span><b>Movement: </b>
+                            {speeds}
+                        </span>
+                    </li>
                 </ul>
             </div>
         )
@@ -196,8 +189,11 @@ export class ModalView extends React.Component {
             if (k === "Traits") {
                 Object.keys(jsonDetails["Traits"]).forEach(k2 => {
                     listItems.push(
-                        <li><b>{this.titleCase(k2)}: </b>
-                            <span>{jsonDetails["Traits"][k2]}</span>
+                        <li>
+                            <span>
+                                <b>{this.titleCase(k2)}: </b>
+                                <i>{jsonDetails["Traits"][k2]}</i>
+                            </span>
                         </li>
                     );
                 });             
@@ -205,8 +201,11 @@ export class ModalView extends React.Component {
                 // checks if obj is array
                 if (Array.isArray(jsonDetails[k])) {
                     listItems.push(
-                        <li><b>{this.titleCase(k)}: </b>
-                        <span>{jsonDetails[k].join(", ")}</span>
+                        <li>
+                            <span>
+                                <b>{this.titleCase(k)}: </b>
+                                <i>{jsonDetails[k].join(", ")}</i>
+                            </span>
                         </li>
                     );
                 }
@@ -226,14 +225,16 @@ export class ModalView extends React.Component {
         let listItems = [];
         Object.keys(jsonActions).forEach(k => {
             listItems.push(
-                <li><b>{this.titleCase(k)}:</b>
-                    <span>{jsonActions[k]}</span>
+                <li>
+                    <span>
+                        <b>{this.titleCase(k)}: </b><i>{jsonActions[k]}</i>
+                    </span>
                 </li>
             );
         });
         return (
             <div className="actions-elem">
-                <div className="heading">Actions:</div>
+                <div className="actions-title">Actions:</div>
                 <hr/>
                 <ul>
                     {listItems}
@@ -245,17 +246,21 @@ export class ModalView extends React.Component {
 
     insertLegendaryActions(jsonLegendaryActions) {
         let listItems = [];
-        if (jsonLegendaryActions.length === 0) {
+        if (Object.entries(jsonLegendaryActions).length !== 0 && jsonLegendaryActions.constructor !== Object) {
+            console.log("OUT")
             Object.keys(jsonLegendaryActions).forEach(k => {
                 listItems.push(
-                    <li><b>{this.titleCase(k)}: </b>
-                        <span>{jsonLegendaryActions[k]}</span>
+                    <li>
+                        <span>
+                            <b>{this.titleCase(k)}: </b>
+                            <i>{jsonLegendaryActions[k]}</i>
+                        </span>
                     </li>
                 );
             });
             return (
                 <div className="actions-elem">
-                    <div className="heading"> Legendary Actions:</div>
+                    <div className="actions-title"> Legendary Actions:</div>
                     <hr />
                     <ul>
                         {listItems}
@@ -263,7 +268,7 @@ export class ModalView extends React.Component {
                 </div>
             )
         } else {
-            return <hr/>
+            return null;
         }
     }    
 }
