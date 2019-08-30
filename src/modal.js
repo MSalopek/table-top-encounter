@@ -100,14 +100,18 @@ export class ModalView extends React.Component {
                         {this.insertDetails(jsonData["details"])}
                         <hr/>
                         {this.insertActions(jsonData["Actions"])}
-                        <hr/>
+                        {
+                            (Object.entries(jsonData["Legendary Actions"]).length !== 0)
+                                ? <hr/>
+                                : null
+                        }
                         {this.insertLegendaryActions(jsonData["Legendary Actions"])}
                         <hr className="bottom-hr"/>
                     </div>
                 </div>
             )  
         } else {
-            return <p>LOADING PLACEHOLDER</p>
+            return <p>Loading...</p>
         }
        
     }
@@ -246,8 +250,7 @@ export class ModalView extends React.Component {
 
     insertLegendaryActions(jsonLegendaryActions) {
         let listItems = [];
-        if (Object.entries(jsonLegendaryActions).length !== 0 && jsonLegendaryActions.constructor !== Object) {
-            console.log("OUT")
+        if (Object.entries(jsonLegendaryActions).length !== 0) {
             Object.keys(jsonLegendaryActions).forEach(k => {
                 listItems.push(
                     <li>
