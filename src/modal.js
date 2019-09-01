@@ -5,6 +5,8 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import './modal.css';
 
+// TODO:
+// modal win: put stats into first part (basic info) -- make it flex
 
 export class ModalView extends React.Component {
     // takes JSON response
@@ -36,15 +38,15 @@ export class ModalView extends React.Component {
     }
 
     fetchModalViewData() {
-        // bad coding....
+        // check if uid is Integer
         const url = 'http://localhost:8000/api/v1/bestiary/'+this.props.uid+"/"
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 this.setState({
                     jsonData: data,
                     isLoading: false,
+                    lastUID: this.props.uid
                 });
             })
     }
@@ -64,7 +66,6 @@ export class ModalView extends React.Component {
 
         if (!this.state.isLoading) {
             const jsonData = this.state.jsonData;
-            console.log(jsonData);
             return (
                 <div className="modal-window">
                     <div className="modal-content">
@@ -81,21 +82,22 @@ export class ModalView extends React.Component {
                                 jsonData['Challenge'][0])
                         }
                         <hr/>
-                        {
-                            this.insertBaseElems(
-                                jsonData["Size"],
-                                jsonData["AC"],
-                                jsonData["AC Type"],
-                                jsonData["HP"],
-                                jsonData["HP Dice"],
-                                jsonData["Speed"],
-                            )
-                        }
-                        <hr/>
-                        {
-                            this.insertStatblock(jsonData["Stats"], 
-                            jsonData["statMods"])
-                        }
+                        <div className="overview">
+                            {
+                                this.insertBaseElems(
+                                    jsonData["Size"],
+                                    jsonData["AC"],
+                                    jsonData["AC Type"],
+                                    jsonData["HP"],
+                                    jsonData["HP Dice"],
+                                    jsonData["Speed"],
+                                )
+                            }
+                            {
+                                this.insertStatblock(jsonData["Stats"], 
+                                jsonData["statMods"])
+                            }
+                        </div>
                         <hr/>
                         {this.insertDetails(jsonData["details"])}
                         <hr/>
