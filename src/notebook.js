@@ -75,7 +75,6 @@ class BestiaryListElem extends React.Component {
 
     onModalButtonClick(event) {
         event.preventDefault();
-        console.log("SENDING", this.props.uid)
         this.props.showModal(this.props.uid);
     }
 
@@ -106,28 +105,17 @@ class BestiaryListElem extends React.Component {
 
     render () {
         return (
-            <li key={this.props.key_name} className="list-elem">
+            <li key={uniqueId('beast-entry')} className="list-elem">
             <div className="beast-element">
-                <div className="statblock">
-                    <table className="beast-info-table">
-                    <thead>
-                        <tr>
-                            <th colSpan="4">{this.props.p_name}</th>
-                        </tr>
-                    </thead>
-                    <tbody> 
-                        <tr>
-                            <td>
-                                <button className="activateModalBtn" onClick={e => this.onModalButtonClick(e)}>
-                                    <FontAwesomeIcon icon={faQuestionCircle} size="lg"/>
-                                </button>
-                            </td>
-                            <td><span><FontAwesomeIcon icon={faShieldAlt}/></span> {this.props.ac}</td>
-                            <td><span><FontAwesomeIcon icon={faPlus}/></span> {this.props.hp}</td>
-                            <td><span><FontAwesomeIcon icon={faStar}/></span> {this.props.cr}</td>
-                        </tr>
-                    </tbody>
-                    </table>
+                <div className="beast-entry">
+                    <div className="info-button">
+                        <button className="activateModalBtn" onClick={e => this.onModalButtonClick(e)}>
+                            <FontAwesomeIcon icon={faQuestionCircle} size="lg"/>
+                        </button>
+                    </div>
+                    <div className="beast-name">
+                        {this.props.name}
+                    </div>
                 </div>
                 <div className="notebook-counter">
                     <div className="counter"><p className="counter-para">{this.state.count}</p></div>
@@ -165,18 +153,14 @@ class BestiaryContent extends React.Component {
                     <ul>
                     {!isLoading ? (
                         bestiary.slice(minIndex, maxIndex+1).map(item => {
-                            const { name, pretty_name, ac, hp, cr, id } = item;
+                            const { pretty_name, id } = item;
                             return (
                                 <BestiaryListElem 
-                                    key={uniqueId()} 
-                                    addPlayer={this.props.addPlayer} 
-                                    key_name={name} 
-                                    p_name={pretty_name} 
-                                    ac={ac} 
-                                    hp={hp} 
-                                    cr={cr}
-                                    showModal={this.props.showModal}
+                                    key={uniqueId('bestiary')} 
                                     uid={id}
+                                    addPlayer={this.props.addPlayer} 
+                                    showModal={this.props.showModal}
+                                    name={pretty_name} 
                                 />
                             );
                         })) : (<div className="loader"></div>)
