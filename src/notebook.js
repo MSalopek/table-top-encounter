@@ -95,7 +95,7 @@ class BestiaryListElem extends React.Component {
     sendBeastData(event) {
         event.preventDefault();
         const data = {
-            name: this.props.p_name,
+            name: this.props.name,
             ac: this.props.ac,
             hp: this.props.hp,
             count: this.state.count
@@ -153,10 +153,12 @@ class BestiaryContent extends React.Component {
                     <ul>
                     {!isLoading ? (
                         bestiary.slice(minIndex, maxIndex+1).map(item => {
-                            const { pretty_name, id } = item;
+                            const { pretty_name, ac, hp, id } = item;
                             return (
                                 <BestiaryListElem 
-                                    key={uniqueId('bestiary')} 
+                                    key={uniqueId('bestiary')}
+                                    ac={ac}
+                                    hp={hp}
                                     uid={id}
                                     addPlayer={this.props.addPlayer} 
                                     showModal={this.props.showModal}
@@ -280,7 +282,6 @@ export class Notebook extends React.Component {
     }
 
     handleTabChange(activeTab) {
-        console.log("CALLBACK RCV")
         this.setState({
             activeView: activeTab,
         });
