@@ -73,6 +73,11 @@ class BestiaryListElem extends React.Component {
         }
     }
 
+    onModalButtonClick(event) {
+        event.preventDefault();
+        this.props.showModal(this.props.uid);
+    }
+
     onClickUp(event) {
         event.preventDefault();
         if (this.state.count < 10) {
@@ -90,7 +95,7 @@ class BestiaryListElem extends React.Component {
     sendBeastData(event) {
         event.preventDefault();
         const data = {
-            name: this.props.p_name,
+            name: this.props.name,
             ac: this.props.ac,
             hp: this.props.hp,
             count: this.state.count
@@ -100,24 +105,17 @@ class BestiaryListElem extends React.Component {
 
     render () {
         return (
-            <li key={this.props.key_name} className="list-elem">
+            <li key={uniqueId('beast-entry')} className="list-elem">
             <div className="beast-element">
-                <div className="statblock">
-                    <table className="beast-info-table">
-                    <thead>
-                        <tr>
-                            <th colSpan="4">{this.props.p_name}</th>
-                        </tr>
-                    </thead>
-                    <tbody> 
-                        <tr>
-                            <td><FontAwesomeIcon icon={faQuestionCircle}/></td>
-                            <td><span><FontAwesomeIcon icon={faShieldAlt}/></span> {this.props.ac}</td>
-                            <td><span><FontAwesomeIcon icon={faPlus}/></span> {this.props.hp}</td>
-                            <td><span><FontAwesomeIcon icon={faStar}/></span> {this.props.cr}</td>
-                        </tr>
-                    </tbody>
-                    </table>
+                <div className="beast-entry">
+                    <div className="info-button">
+                        <button className="activateModalBtn" onClick={e => this.onModalButtonClick(e)}>
+                            <FontAwesomeIcon icon={faQuestionCircle} size="lg"/>
+                        </button>
+                    </div>
+                    <div className="beast-name">
+                        {this.props.name}
+                    </div>
                 </div>
                 <div className="notebook-counter">
                     <div className="counter"><p className="counter-para">{this.state.count}</p></div>
@@ -155,16 +153,16 @@ class BestiaryContent extends React.Component {
                     <ul>
                     {!isLoading ? (
                         bestiary.slice(minIndex, maxIndex+1).map(item => {
-                            const { name, pretty_name, ac, hp, cr } = item;
+                            const { pretty_name, ac, hp, id } = item;
                             return (
                                 <BestiaryListElem 
-                                    key={uniqueId()} 
+                                    key={uniqueId('bestiary')}
+                                    ac={ac}
+                                    hp={hp}
+                                    uid={id}
                                     addPlayer={this.props.addPlayer} 
-                                    key_name={name} 
-                                    p_name={pretty_name} 
-                                    ac={ac} 
-                                    hp={hp} 
-                                    cr={cr} 
+                                    showModal={this.props.showModal}
+                                    name={pretty_name} 
                                 />
                             );
                         })) : (<div className="loader"></div>)
@@ -284,7 +282,6 @@ export class Notebook extends React.Component {
     }
 
     handleTabChange(activeTab) {
-        console.log("CALLBACK RCV")
         this.setState({
             activeView: activeTab,
         });
@@ -313,7 +310,8 @@ export class Notebook extends React.Component {
                         bestiary={this.state.bestiary} 
                         min={0}
                         max={this.state.bestiary_max_index}
-                        addPlayer={this.props.addPlayer}/>
+                        addPlayer={this.props.addPlayer}
+                        showModal={this.props.showModal}/>
             case "PCs":
                 return <div>NOT IMPLEMENTED</div>
             case "Create":
