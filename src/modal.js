@@ -5,8 +5,6 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import './modal.css';
 
-// TODO:
-// modal win: put stats into first part (basic info) -- make it flex
 
 export class ModalView extends React.Component {
     // takes JSON response
@@ -247,7 +245,6 @@ export class ModalView extends React.Component {
                 </ul>
             </div>
         )
-
     }
 
     insertLegendaryActions(jsonLegendaryActions) {
